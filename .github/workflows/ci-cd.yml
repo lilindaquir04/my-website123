@@ -21,23 +21,22 @@ jobs:
         node-version: '18'
         
     - name: 🧪 Run tests
+      id: tests
       run: |
         node tests/test.js
 
   deploy:
     name: 🚀 Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    needs: test  # Ждет пока тесты пройдут
+    needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v3
       
-    - name: 🚀 Deploy
+    - name: 🎉 Success message
       run: |
-        echo "✅ Тесты прошли! Деплоим на GitHub Pages..."
-        echo "Сайт будет доступен по адресу:"
-        echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
-        
-    # GitHub Pages автоматически деплоит при пуше в main
+        echo "✅ Все тесты прошли успешно!"
+        echo "🚀 Сайт автоматически обновится через 1-2 минуты"
+        echo "📎 URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"

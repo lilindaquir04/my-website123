@@ -1,12 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Кто здесь?!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир Котиков 🐱</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Почему ты это читаешь?</h1>
-    <p>Я джаззмен, только белый</p>
-    <p>Я генгста-репер, только так же белый, новый эминем, парень</p>
-</body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🐱 Добро пожаловать в Мир Котиков! 🐱</h1>
+            <p class="subtitle">Здесь только самые милые и пушистые</p>
+        </header>
 
+        <div class="cat-gallery">
+            <div class="cat-card">
+                <div class="cat-avatar">😸</div>
+                <h3>Барсик</h3>
+                <p>Любит спать на клавиатуре и мешать работать</p>
+            </div>
+            
+            <div class="cat-card">
+                <div class="cat-avatar">😼</div>
+                <h3>Мурзик</h3>
+                <p>Профессиональный охотник за солнечными зайчиками</p>
+            </div>
+            
+            <div class="cat-card">
+                <div class="cat-avatar">😻</div>
+                <h3>Снежок</h3>
+                <p>Обожает мурлыкать и тереться об ноги</p>
+            </div>
+        </div>
+
+        <div class="fun-section">
+            <button class="fun-btn" onclick="showFact()">Покажи факт о котиках!</button>
+            <div id="fact" class="fact-box"></div>
+        </div>
+
+        <div class="counter">
+            <h3>Сколько раз ты улыбнулся котикам:</h3>
+            <div class="counter-display">
+                <span id="count">0</span>
+                <button onclick="incrementCounter()">+1 улыбка 😊</button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Сделано с ❤️ и кошачьей мурлыкой</p>
+            <a href="about.html">О проекте</a>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>

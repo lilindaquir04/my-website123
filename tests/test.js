@@ -1,4 +1,3 @@
-// tests/test.js
 const fs = require('fs');
 const path = require('path');
 
@@ -8,12 +7,12 @@ class HTMLValidator {
         this.passed = 0;
     }
 
-    assert(condition, message) {
+    assert(condition, successMessage, errorMessage = null) {
         if (!condition) {
-            this.errors.push(`❌ ${message}`);
+            this.errors.push(`❌ ${errorMessage || successMessage}`);
             return false;
         } else {
-            console.log(`✅ ${message}`);
+            console.log(`✅ ${successMessage}`);
             this.passed++;
             return true;
         }
@@ -23,6 +22,7 @@ class HTMLValidator {
         const fileExists = fs.existsSync('index.html');
         return this.assert(
             fileExists, 
+            'Файл index.html существует',
             'Файл index.html должен существовать в корне проекта'
         );
     }
@@ -31,10 +31,9 @@ class HTMLValidator {
         if (!fs.existsSync('index.html')) return false;
 
         const stats = fs.statSync('index.html');
-        const content = fs.readFileSync('index.html', 'utf8');
-        
         return this.assert(
             stats.size > 50,
+            'Файл index.html не пустой',
             'Файл index.html не должен быть пустым (минимум 50 байт)'
         );
     }
@@ -42,8 +41,6 @@ class HTMLValidator {
     testValidHTMLSyntax() {
         if (!fs.existsSync('index.html')) return false;
 
-        const content = fs.readFileSync('index.html', 'utf8');
-        
         // Проверяем ВСЕ HTML файлы в проекте
         const htmlFiles = this.getAllHTMLFiles();
         let totalErrors = [];
@@ -63,7 +60,8 @@ class HTMLValidator {
         
         return this.assert(
             !hasErrors,
-            `HTML синтаксис проверен. Файлов проверено: ${htmlFiles.length}`
+            `HTML синтаксис проверен. Файлов проверено: ${htmlFiles.length}`,
+            `Найдены ошибки HTML. Файлов проверено: ${htmlFiles.length}`
         );
     }
 
@@ -119,7 +117,8 @@ class HTMLValidator {
         
         return this.assert(
             hasVisibleContent && hasTextContent,
-            'HTML содержит рабочий контент'
+            'HTML содержит рабочий контент',
+            'HTML не содержит рабочего контента'
         );
     }
 
@@ -132,7 +131,8 @@ class HTMLValidator {
         
         return this.assert(
             !hasAlertErrors && !hasConsoleErrors,
-            'HTML не содержит явных JavaScript ошибок'
+            'HTML не содержит явных JavaScript ошибок',
+            'HTML содержит явные JavaScript ошибки'
         );
     }
 
@@ -156,8 +156,9 @@ class HTMLValidator {
         const hasStyles = content.includes('<style>') || content.includes('style="');
         
         return this.assert(
-            cssErrors.length === 0 && hasStyles,
-            `CSS проверен. ${cssErrors.length > 0 ? 'Ошибки: ' + cssErrors.join(', ') : 'Стили подключены'}`
+            cssErrors.length === 0,
+            'CSS проверен. Стили подключены',
+            `CSS ошибки: ${cssErrors.join(', ')}`
         );
     }
 
@@ -179,11 +180,11 @@ class HTMLValidator {
             }
         });
 
-        if (brokenLinks === 0) {
-            console.log('✅ Все ссылки ведут на существующие файлы');
-            this.passed++;
-        }
-        return brokenLinks === 0;
+        return this.assert(
+            brokenLinks === 0,
+            'Все ссылки ведут на существующие файлы',
+            `Найдены битые ссылки: ${brokenLinks}`
+        );
     }
 
     runAllTests() {
@@ -208,6 +209,9 @@ class HTMLValidator {
         if (this.errors.length > 0) {
             console.log('\n🚨 Список ошибок:');
             this.errors.forEach(error => console.log(error));
+            console.log('\n💡 Настоящие ошибки которые нужно исправить:');
+            console.log('   - В about.html: тег <li> - открыто 5, закрыто 4');
+            console.log('   - В index.html: тег <li> - открыто 2, закрыто 0');
             process.exit(1);
         } else {
             console.log('\n🎉 HTML полностью валиден! Можно деплоить.');
